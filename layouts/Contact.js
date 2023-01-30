@@ -24,7 +24,6 @@ const Contact = ({ data }) => {
                   type="text"
                   placeholder="Name"
                   required
-                  onChange={(e) => (e)}
                 />
               </div>
               <div className="mb-3">
