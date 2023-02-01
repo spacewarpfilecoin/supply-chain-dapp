@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+ // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   let router= useRouter();
 
@@ -26,7 +26,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center text-center h-screen bg-theme-light">
+    <div className="flex justify-center items-center text-center h-screen bg-slate-200">
       <form className="bg-white  rounded-lg shadow-md px-12 py-6 " onSubmit={handleSubmit}>
       <div className="flex gap-4 justify-center">
       <img src="images/favicon.png" alt="spplychain-favicon" className='w-[30px] h-[30px]' />
@@ -81,9 +81,10 @@ const Login = () => {
       >
         Continue with Email
       </button>
+
       {/* <div className="mb-4">
         </div> */}
-      <div className="mb-1 mt-4">
+       <div className="mb-1 mt-4">
         <label
           className="block text-gray-700 font-medium "
           htmlFor="password"
