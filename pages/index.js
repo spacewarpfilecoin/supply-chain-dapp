@@ -1,4 +1,4 @@
-import Login from "@layouts/components/login";
+import Login from "@layouts/components/Login";
 import LandingPage from "@layouts/components/LandingPage";
 
 
