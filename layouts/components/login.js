@@ -1,7 +1,11 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { useRouter } from 'next/router'
 import Image from "next/image";
+import { sequence } from '0xsequence';
+import { ethers } from 'ethers';
+import Web3Modal from '@0xsequence/web3modal'
+import WalletConnect from '@walletconnect/web3-provider'
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +28,8 @@ const Login = () => {
       setError("Invalid email or password");
     }
   };
-
+  
+ 
   return (
     <div className="flex justify-center items-center text-center h-screen bg-slate-200">
       <form className="bg-white  rounded-lg shadow-md px-12 py-6 " onSubmit={handleSubmit}>
@@ -94,7 +99,7 @@ const Login = () => {
       </div>
       <button className="bg-blue-900 text-white appearance-none border-2 rounded-full cursor-pointer w-full py-2 px-4 leading-tight focus:outline-none"
         >
-          Connect with Wallet
+          Connect Wallet
           </button>
     </form> 
     </div>

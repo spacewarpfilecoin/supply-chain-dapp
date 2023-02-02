@@ -4,8 +4,13 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import TagManager from "react-gtm-module";
 import "styles/style.scss";
+import Navbar from "@layouts/components/Navbar";
+import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+
 
 const App = ({ Component, pageProps }) => {
+ 
+
   // default theme setup
 
   // import google font css
@@ -53,6 +58,12 @@ const App = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1, maximum-scale=5"
         />
       </Head>
+      <header>
+
+     {/**Navbar Section*/}
+
+       <Navbar />
+        </header>
       <Component {...pageProps} />
     </>
   );
