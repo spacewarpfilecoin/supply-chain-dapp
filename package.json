@@ -12,10 +12,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@0xsequence/web3modal": "^2.0.4",
     "@web3modal/ethereum": "^2.1.0",
     "@web3modal/react": "^2.1.0",
-    "0xsequence": "^0.43.14",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "github-slugger": "^2.0.0",
@@ -31,7 +29,7 @@
     "rehype-slug": "^5.1.0",
     "remark-gfm": "^3.0.1",
     "swiper": "^8.4.5",
-    "wagmi": "^0.10.15"
+    "wagmi": "^0.11.3"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",

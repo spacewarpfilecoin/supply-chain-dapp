@@ -1,4 +1,4 @@
-import CreateOrder from "@layouts/components/CreateOder";
+import CreateOrder from "@layouts/components/CreateOrder";
 
 const MakeOrder = () => {
     return ( 

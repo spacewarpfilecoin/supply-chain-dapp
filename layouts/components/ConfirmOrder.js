@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Link from 'next/link';
 
 const ConfirmOrder = () => {
     const [id, setId] = useState("");
@@ -12,10 +13,12 @@ const ConfirmOrder = () => {
   };
 
     return (
-    <div className="p-10 max-w-sm mx-auto">
-      <h2 className="text-2xl font-medium mb-6">Sign with your wallet to confirm</h2>
+      <div className="bg-theme-light ">
+    <div className="flex flex-col justify-center items-center h-screen px-6 py-10 max-w-sm mx-auto ">
+    <Link  href="createOrder" className="text-2xl font-medium mb-10">Confirmed Order</Link>
+      <h2 className="text-xl font-medium mb-6 text-center">Sign with your wallet to confirm</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-6">
+        <div className="mb-6 ">
           <label className="block mb-2 font-medium text-gray-700">
             ID
           </label>
@@ -23,7 +26,7 @@ const ConfirmOrder = () => {
             type="text"
             value={id}
             onChange={(e) => setId(e.target.value)}
-            className="border border-gray-400 p-2 w-full"
+            className="border border-gray-400 p-2 w-full rounded-full"
             placeholder="Enter your tracking id"
             required
           />
@@ -31,11 +34,12 @@ const ConfirmOrder = () => {
      
         <button
           type="submit"
-          className="bg-indigo-500 text-white p-2 w-full"
+          className="bg-blue-900 text-white p-2 w-full border rounded-full shadow-md"
         >
           Confirm
         </button>
       </form>
+    </div>
     </div>
   );
 };

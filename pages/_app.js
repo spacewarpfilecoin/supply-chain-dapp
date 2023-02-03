@@ -5,12 +5,31 @@ import { useEffect, useState } from "react";
 import TagManager from "react-gtm-module";
 import "styles/style.scss";
 import Navbar from "@layouts/components/Navbar";
-import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import { useRouter } from "next/router";
+import { Web3Modal } from "@web3modal/react";
+import { chains, providers } from "@web3modal/ethereum";
+
+{/**WalletConnect 
+const modalConfig = {
+  theme: 'dark',
+  accentColour: 'default',
+  ethereum: {
+    appName: 'spplychain Dapp',
+    chains: [
+      chains.goerli, chains.polygonMumbai
+    ],
+    provider: [
+      providers.walletConnectProvider({
+        projectId: '2892f3de6fb5f15454a2d35f67737e2b',
+      })
+    ],
+    autoConnect: true,
+  },
+  projectId: '2892f3de6fb5f15454a2d35f67737e2b',
+}; */}
 
 
 const App = ({ Component, pageProps }) => {
- 
-
   // default theme setup
 
   // import google font css
@@ -61,10 +80,12 @@ const App = ({ Component, pageProps }) => {
       <header>
 
      {/**Navbar Section*/}
-
        <Navbar />
         </header>
-      <Component {...pageProps} />
+        <Component {...pageProps} />
+
+      {/**WalletConnect 
+      <Web3Modal config={modalConfig} />**/}
     </>
   );
 };

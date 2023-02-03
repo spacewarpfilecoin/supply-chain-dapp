@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Link from 'next/link';
 
 const UpdateTracker = () => {
     const [id, setId] = useState("");
@@ -30,10 +31,15 @@ const UpdateTracker = () => {
   };
 
     return (
+      <div className="bg-theme-light">
+      <div id="createOrder" className=" mx-auto py-20 px-6 max-w-sm h-screen ">
+        <div className="text-center">
+      <Link  href="updateOrder" className="text-2xl font-medium mt-10">Update Order</Link>
+      </div>
     <div className="p-10 max-w-sm mx-auto">
-      <h2 className="text-2xl font-medium mb-6">Update Current Order Location</h2>
+      <h2 className="text-xl font-medium mb-6 text-center">Update Current Order Location</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">
             ID
           </label>
@@ -41,12 +47,12 @@ const UpdateTracker = () => {
             type="text"
             value={id}
             onChange={(e) => setId(e.target.value)}
-            className="border border-gray-400 p-2 w-full"
+            className="border border-gray-400 p-2 w-full rounded-full"
             placeholder="Enter your tracking id"
             required
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">
             Address
           </label>
@@ -54,20 +60,20 @@ const UpdateTracker = () => {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="border border-gray-400 p-2 w-full"
+            className="border border-gray-400 p-2 w-full rounded-full"
             placeholder="Enter your address"
             required
           />
         </div>
         
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">
             Status
                     </label>
                     <select
           id="status"
           name="status"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-full"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
@@ -87,11 +93,13 @@ const UpdateTracker = () => {
         </div>
         <button
           type="submit"
-          className="bg-indigo-500 text-white p-2 w-full"
+          className="bg-blue-900 text-white p-2 w-full rounded-full"
         >
           Update
         </button>
       </form>
+    </div>
+    </div>
     </div>
   );
 };
