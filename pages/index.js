@@ -1,18 +1,13 @@
 import Login from "@layouts/components/login";
-import CreateOrder from "@layouts/components/CreateOrder";
-import ConfirmOrder from "@layouts/components/ConfirmOrder";
-import UpdateOrder from "@layouts/components/UpdateOrder"
-
 
 export default function Home() {
- 
-
   return (
+    //TODO add a localstorage check for metamask to only allow the other routes when user is logged in
     <div>
-      <Login />
+      {/* <Login />
       <CreateOrder />
       <UpdateOrder />
-      <ConfirmOrder />
+      <ConfirmOrder /> */}
     </div>
-    )
+  );
 }
