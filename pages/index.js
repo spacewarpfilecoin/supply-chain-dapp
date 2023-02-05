@@ -4,10 +4,10 @@ export default function Home() {
   return (
     //TODO add a localstorage check for metamask to only allow the other routes when user is logged in
     <div>
-      {/* <Login />
-      <CreateOrder />
+      <Login />
+      {/* <CreateOrder />
       <UpdateOrder />
-      <ConfirmOrder /> */}
+      <ConfirmOrder />  */}
     </div>
   );
 }

@@ -1,16 +1,17 @@
 import Link from "next/link";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { useRouter } from 'next/router'
-import Image from "next/image";
-import { ethers } from 'ethers';
-import { useAccount, ConnectButton } from "wagmi";
+import { Contract, providers, utils } from "ethers";
+import Web3Modal from "web3modal";
+
+
 
 const Login = () => {
   {/** */}
-  const [email, setEmail] = useState("");
- // const [password, setPassword] = useState("");
+  const [walletConnected, setWalletConnected] = useState(false);
   const [error, setError] = useState("");
   let router= useRouter();
+  const web3ModalRef = useRef();
 
 //   function redirect() {
 //     router.push('/home')
@@ -18,25 +19,59 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (email === "hello@example.com") {
-      setError("");
-      // Navigate to the home page after successful login
-      router.push('/home')
-    } else {
-      setError("Invalid email or password");
+    if (!walletConnected) {
+      web3ModalRef.current = new Web3Modal({
+        network: "HyperSpace",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+      connectWallet();
     }
+
+  // connectWallet();
+  setWalletConnected(true)
   };
 
-  {/**WalletConnect/useAddres 
-  const { address, isConnected} = useAccount();
+  const connectWallet = async () => {
+    try {
+      await getProviderOrSigner();
+      setWalletConnected(true);
+      router.push('/home')
+    } catch (err) {
+      console.error(err);
+    }
+  }; 
 
-  if(!isConnected){
-   return <ConnectButton />;
-  }
-return <div>Your address is {address}</div>*/}
-  
+
+  const getProviderOrSigner = async (needSigner = false) => {
+    // Connect to Metamask
+    const provider = await web3ModalRef.current.connect();
+    const web3Provider = new providers.Web3Provider(provider);
+
+    // If user is not connected to the HyperSpace network, let them know and throw an error
+    const { chainId } = await web3Provider.getNetwork();
+    if (chainId !== 3141) {
+      window.alert("Unsopprted network");
+    }
+
+    if (needSigner) {
+      const signer = web3Provider.getSigner();
+      return signer;
+    }
+    return web3Provider;
+  };
  
+  useEffect(() => {
+    
+    if (!walletConnected) {
+      web3ModalRef.current = new Web3Modal({
+        network: "HyperSpace",
+        providerOptions: {},
+        disableInjectedProvider: false,
+      });
+      connectWallet();
+    }
+  }, [walletConnected]);
   return (
     <div className="flex justify-center items-center text-center h-screen bg-theme-light">
       <form className="bg-white  rounded-lg shadow-md px-12 py-6 mt-8 " onSubmit={handleSubmit}>
@@ -47,67 +82,18 @@ return <div>Your address is {address}</div>*/}
         Splychain
         </h2>
       </div>
-      <div className="">
-        <h2 className="text-lg text-center">
-          Sign in
-        </h2>
-        <p>Continue with</p>
-        <div className="py-4">
-          <ul className="flex justify-center gap-2">
-            <li className="cursor-pointer">
-            <Link href='' />
-            <img src="images/twitter.svg" alt="twitter-icon" />
-            </li>
-            <li className="cursor-pointer">
-            <Link href='' />
-            <img src="images/google.svg" alt="google-icon"/>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="mb-4 ">
-        <label
-          className="block text-gray-700 font-medium mb-2"
-          htmlFor="email"
-        >
-          Email
-        </label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          placeholder="hello@example.com"
-          value={email}
-          onChange={(e) => setEmail
-        (e.target.value)}
-          className="bg-gray-200 appearance-none border-2 border-gray-200 rounded-full w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white"
-        />
-      </div>
-       {error && (
-        <div className="mb-3 text-red-500 text-sm">{error}</div>
-        
-      )}
-      <button
-        type="submit"
-        className="bg-blue-900 text-white appearance-none border-2 rounded-full cursor-pointer w-full py-2 px-4 leading-tight focus:outline-none"
-      >
-        Continue with Email
-      </button>
-
-      {/* <div className="mb-4">
-        </div> */}
        <div className="mb-1 mt-4">
         <label
           className="block text-gray-700 font-medium "
           htmlFor="password"
         >
-          External Wallet
+          Please Connect you external Wallet to continue
         </label>
       </div>
-      <button className="bg-blue-900 text-white appearance-none border-2 rounded-full cursor-pointer w-full py-2 px-4 leading-tight focus:outline-none"
+      {/* <button onClick={connectWallet} className="bg-blue-900 text-white appearance-none border-2 rounded-full cursor-pointer w-full py-2 px-4 leading-tight focus:outline-none"
         >
           Connect Wallet
-          </button>
+          </button> */}
     </form> 
     </div>
   );
