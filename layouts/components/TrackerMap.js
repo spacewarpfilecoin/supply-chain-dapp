@@ -73,16 +73,11 @@ const ProductMap = ({ itemId }) => {
 
   useEffect(() => {
     getCoordinates();
-    setPath(
-      parsedCoordinates.map((coordinate) => ({
-        lat: coordinate.latitude,
-        lng: coordinate.longitude,
-      }))
-    );
   }, []);
 
   const handleApiLoaded = (map, maps) => {
     const bounds = new maps.LatLngBounds();
+    console.log({ parsedCoordinates });
     parsedCoordinates.forEach((coordinate) => {
       bounds.extend({
         lat: coordinate.latitude,
@@ -91,9 +86,8 @@ const ProductMap = ({ itemId }) => {
     });
     map.fitBounds(bounds);
 
-    const triangleCoords = path;
     var polyline = new maps.Polyline({
-      path: triangleCoords,
+      path: path,
       geodesic: true,
       strokeColor: "#FF0000",
       strokeOpacity: 0.8,
@@ -102,11 +96,20 @@ const ProductMap = ({ itemId }) => {
     polyline.setMap(map);
   };
 
+  useEffect(() => {
+    setPath(
+      parsedCoordinates.map((coordinate) => ({
+        lat: coordinate.latitude,
+        lng: coordinate.longitude,
+      }))
+    );
+  }, [path]);
+
   return (
     <div
       style={{
         height: "700px",
-        width: "80%",
+        width: "100%",
         alignItems: "center",
         justifyContent: "center",
         display: "flex",
@@ -119,6 +122,7 @@ const ProductMap = ({ itemId }) => {
           bootstrapURLKeys={{ key: "AIzaSyA0Fui7mx4b1rtwZ-TQuY1r80bkOCfj6zY" }}
           defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
           defaultZoom={12}
+          yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         >
           {parsedCoordinates.map((coordinate) => (
