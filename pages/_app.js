@@ -1,7 +1,3 @@
-<script
-  type="text/javascript"
-  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"
-/>;
 import config from "@config/config.json";
 import theme from "@config/theme.json";
 import Head from "next/head";
