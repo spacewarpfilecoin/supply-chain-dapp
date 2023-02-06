@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import { Web3Button, Web3NetworkSwitch } from "@web3modal/react";
+
+
+
 
 const Navbar = () => {
     {/**set functionality for nav */ }
@@ -32,8 +36,11 @@ const Navbar = () => {
 
     return (
         <div>
+
             <div style={{ backgroundColor: `${color}` }} className="fixed left-0 right-0 w-[100%] z-10 mb-5">
+
                 <div className="max-w-[1240px] m-auto flex justify-between mt-2 items-center px-4 py-1">
+
                     <Link href="/">
                         <img src='images/logo.png' alt='logo' className='font-bold text-4xl text-gold w-[75%] h-[30px]'></img>
                     </Link>
@@ -82,8 +89,15 @@ const Navbar = () => {
                                 </ul>
                                 {/*</div>*/}
                             </div>
+
                         </div>
                     </div>
+                    <Web3Button
+                        className="p-20"
+                        icon="show"
+                        label="Connect Wallet"
+                        balance="hide"
+                    />
                 </div>
             </div>
         </div>
