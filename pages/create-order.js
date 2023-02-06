@@ -3,6 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Contract, providers } from "ethers";
 import { useContract, useProvider, useSigner, useAccount } from "wagmi";
+import Autocomplete from "react-google-autocomplete";
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
 
 import {
   SMART_CONTRACT_ABI,
@@ -19,7 +24,7 @@ const CreateOrder = () => {
   const { address, isConnecting, isDisconnected } = useAccount();
   const [sender, setSender] = useState(address);
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [shippingAddresss, setShippingAddress] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
   const route = useRouter();
   const provider = useProvider();
   const { data: signer, isError, isLoading } = useSigner();
@@ -42,20 +47,19 @@ const CreateOrder = () => {
     event.preventDefault();
     try {
       setLoading(true);
-
       const rawScoord = await getRawDataContract.stringToBytes32(
-        "52.37403, 4.88969"
+        deliveryAddress.trim()
       );
       const rawDcoord = await getRawDataContract.stringToBytes32(
-        "62.37403, 5.88969"
+        shippingAddress.trim()
       );
-
       const didItWork = await getTrackerContract.createOrder(
         receiver,
         sender,
         rawDcoord,
         rawScoord
       );
+      await didItWork.wait();
       setLoading(false);
       route.push("/orders-overview");
     } catch (error) {
@@ -71,7 +75,20 @@ const CreateOrder = () => {
     // setDeliveryAddress("");
     // setShippingAddress("");
   };
+  const handleReceiverLocation = async (value) => {
+    const results = await geocodeByAddress(value.label);
+    const latLng = await getLatLng(results[0]);
+    setDeliveryAddress(latLng.lat + "," + latLng.lng);
 
+    // const loc = place.geometry?.location.lat();
+    // console.log({ loc });
+  };
+
+  const handleSenderLocation = async (value) => {
+    const results = await geocodeByAddress(value.label);
+    const latLng = await getLatLng(results[0]);
+    setShippingAddress(latLng.lat + "," + latLng.lng);
+  };
   return (
     <div className="bg-theme-light">
       <div id="createOrder" className=" mx-auto h-screen max-w-sm py-20 px-6 ">
@@ -111,26 +128,40 @@ const CreateOrder = () => {
             <label className="mb-2 block rounded-full font-medium  text-gray-700">
               Delivery Address
             </label>
-            <input
+            <GooglePlacesAutocomplete
+              apiKey={"AIzaSyA0Fui7mx4b1rtwZ-TQuY1r80bkOCfj6zY"}
+              selectProps={{
+                deliveryAddress,
+                onChange: (place) => handleReceiverLocation(place),
+              }}
+              className={
+                "w-full rounded-full border border-gray-400 p-2 text-black"
+              }
+              placeholder="Enter your shipping delivery address"
+            />
+            {/* <input
               type="text"
               value={deliveryAddress}
               onChange={(e) => setDeliveryAddress(e.target.value)}
               className="w-full rounded-full border border-gray-400 p-2 text-black"
               placeholder="Enter your shipping delivery address"
               required
-            />
+            />*/}
           </div>
           <div className="mb-4">
             <label className="mb-2 block font-medium text-gray-700">
               Shipping Address
             </label>
-            <input
-              type="text"
-              value={shippingAddresss}
-              onChange={(e) => setShippingAddress(e.target.value)}
-              className="text-md w-full rounded-full border border-gray-400 p-2 text-black"
-              placeholder="Enter the shipping address you want to order"
-              required
+            <GooglePlacesAutocomplete
+              apiKey={"AIzaSyA0Fui7mx4b1rtwZ-TQuY1r80bkOCfj6zY"}
+              selectProps={{
+                shippingAddress,
+                onChange: (place) => handleSenderLocation(place),
+              }}
+              className={
+                "w-full rounded-full border border-gray-400 p-2 text-black"
+              }
+              placeholder="Enter your shipping delivery address"
             />
           </div>
           <button

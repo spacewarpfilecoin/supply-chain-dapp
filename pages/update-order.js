@@ -3,6 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Contract, providers } from "ethers";
 import { useContract, useProvider, useSigner } from "wagmi";
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
 
 import {
   SMART_CONTRACT_ABI,
@@ -44,7 +48,7 @@ const UpdateTracker = () => {
       setLoading(true);
 
       const rawScoord = await getRawDataContract.stringToBytes32(
-        "52.37403, 4.88969"
+        address.trim()
       );
 
       const didItWork = await getTrackerContract.updateTracker(
@@ -52,6 +56,7 @@ const UpdateTracker = () => {
         rawScoord,
         status
       );
+      await didItWork.wait();
       setLoading(false);
       router.push("/orders-overview");
     } catch (error) {
@@ -62,7 +67,11 @@ const UpdateTracker = () => {
     setAddress("");
     setStatus("");
   };
-
+  const handleUpdateLocation = async (value) => {
+    const results = await geocodeByAddress(value.label);
+    const latLng = await getLatLng(results[0]);
+    setAddress(latLng.lat + "," + latLng.lng);
+  };
   return (
     <div className="bg-theme-light">
       <div id="createOrder" className=" mx-auto h-screen max-w-sm py-20 px-6 ">
@@ -82,7 +91,7 @@ const UpdateTracker = () => {
                 type="text"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
-                className="w-full rounded-full border border-gray-400 p-2"
+                className="ext-black w-full rounded-full border border-gray-400 p-2"
                 placeholder="Enter your tracking id"
                 required
               />
@@ -91,13 +100,16 @@ const UpdateTracker = () => {
               <label className="mb-2 block font-medium text-gray-700">
                 Address
               </label>
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="w-full rounded-full border border-gray-400 p-2"
-                placeholder="Enter your address"
-                required
+              <GooglePlacesAutocomplete
+                apiKey={"AIzaSyA0Fui7mx4b1rtwZ-TQuY1r80bkOCfj6zY"}
+                selectProps={{
+                  address,
+                  onChange: (place) => handleUpdateLocation(place),
+                }}
+                className={
+                  "w-full rounded-full border border-gray-400 p-2 text-black"
+                }
+                placeholder="Enter your shipping delivery address"
               />
             </div>
 
@@ -108,7 +120,7 @@ const UpdateTracker = () => {
               <select
                 id="status"
                 name="status"
-                className="focus:shadow-outline w-full appearance-none rounded rounded-full border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                className="focus:shadow-outline ext-black w-full appearance-none rounded rounded-full border py-2 px-3 leading-tight shadow focus:outline-none"
                 value={status ? status : orderStatus}
                 onChange={(e) => setStatus(e.target.value)}
               >
@@ -128,7 +140,7 @@ const UpdateTracker = () => {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-blue-900 p-2 text-white"
+              className="flex w-full items-center justify-center rounded-full border bg-blue-900 p-4 text-white"
             >
               {loading ? <Loader /> : "Update"}
             </button>

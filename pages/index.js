@@ -8,6 +8,7 @@ import Loader from "@layouts/components/Loader";
 import { set } from "date-fns";
 import { useRouter } from "next/router";
 import Navbar from "@layouts/components/Navbar";
+const orderStatus = { 1: "IN_TRANSIT", 2: "WAREHOUSE", 3: "TRIED TO DELIVER" };
 
 const customStyles = {
   content: {
@@ -112,7 +113,7 @@ function Home() {
   }, [signer]);
 
   return (
-    <>
+    <div class="mx-auto h-screen  max-w-2xl items-center justify-center">
       {isConnected ? (
         <>
           {!showModal ? (
@@ -120,55 +121,81 @@ function Home() {
               <Navbar />
             </header>
           ) : null}
-          <div class="pt-50 flex h-screen min-h-screen w-full items-center justify-center bg-theme-light">
-            {orders[1]?.length > 0 ? (
-              <div
-                id="createOrder"
-                class="w-100% relative flex h-screen items-center justify-center py-20 px-6 "
+          <div class=" mt-50 flex h-3/4 flex-col items-center justify-center rounded-lg border bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800 sm:p-8">
+            <div class="mt-50 mb-4 flex items-center justify-center ">
+              <h3 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                All Orders
+              </h3>
+            </div>
+            <div class="flow-root">
+              {orders[1]?.length > 0 ? (
+                <div
+                  id="createOrder"
+                  class="w-100% py-50 relative flex h-screen items-center justify-center px-6 "
+                >
+                  <ul
+                    role="list"
+                    class="justify-stretch divide-y divide-gray-200 dark:divide-gray-700"
+                  >
+                    {orders[1].map((item, index) => (
+                      <>
+                        <li class="pt-3 pb-0 sm:pt-4">
+                          <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0"></div>
+                            <div class="min-w-0 flex-1">
+                              <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                Order: {index}
+                              </p>
+                              <p class="truncate text-sm font-medium text-gray-900 dark:text-white">
+                                Status: {orderStatus[item]}
+                              </p>
+                            </div>
+                            <button
+                              class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"
+                              onClick={() => handleClick(index)}
+                            >
+                              View Map
+                            </button>
+                            <button
+                              onClick={() => handleUpdate(index, item)}
+                              class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"
+                            >
+                              Update
+                            </button>
+                          </div>
+                        </li>
+                      </>
+                    ))}
+                  </ul>
+                </div>
+              ) : loading ? (
+                <Loader />
+              ) : (
+                <button
+                  type="submit"
+                  className="w-1/4 rounded-full bg-blue-900 p-2 text-white"
+                >
+                  Create order!
+                </button>
+              )}
+              <ReactModal
+                style={customStyles}
+                key={selectedItem + "modal"}
+                isOpen={showModal}
+                onRequestClose={handleClose}
               >
-                <ul class="pt-50 mx-h-screen flex w-full flex-col items-center justify-center">
-                  {orders[1].map((item, index) => (
-                    <>
-                      <li
-                        key={index + item}
-                        className="h-10% m-10 flex w-3/4 justify-between rounded border border-gray-300 p-4"
-                      >
-                        <div onClick={() => handleClick(index)}>{index}</div>
-                        <button onClick={() => handleUpdate(index, item)}>
-                          Update
-                        </button>
-                      </li>
-                    </>
-                  ))}
-                </ul>
-              </div>
-            ) : loading ? (
-              <Loader />
-            ) : (
-              <button
-                type="submit"
-                className="w-1/4 rounded-full bg-blue-900 p-2 text-white"
-              >
-                Create order!
-              </button>
-            )}
-            <ReactModal
-              style={customStyles}
-              key={selectedItem + "modal"}
-              isOpen={showModal}
-              onRequestClose={handleClose}
-            >
-              <>
-                <button onClick={handleClose}>Close</button>
-                <ProductMap itemId={selectedItem} />
-              </>
-            </ReactModal>
+                <>
+                  <button onClick={handleClose}>Close</button>
+                  <ProductMap itemId={selectedItem} />
+                </>
+              </ReactModal>
+            </div>
           </div>
         </>
       ) : (
         <Login />
       )}
-    </>
+    </div>
   );
 }
 

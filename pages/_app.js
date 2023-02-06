@@ -100,7 +100,7 @@ const App = ({ Component, pageProps }) => {
           {isConnected ? (
             <header>
               {/**Navbar Section*/}
-              {route.pathname === "/orders-overview" ? null : <Navbar />}
+              {route.pathname === "/" ? null : <Navbar />}
             </header>
           ) : null}
 
