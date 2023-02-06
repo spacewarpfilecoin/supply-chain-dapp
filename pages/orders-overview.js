@@ -113,14 +113,14 @@ function OrdersOverview() {
   }, [signer]);
   console.log({ orders });
   return (
-    <div class="mx-auto h-screen  max-w-2xl items-center justify-center">
-      <>
-        {!showModal ? (
-          <header>
-            <Navbar />
-          </header>
-        ) : null}
-        <div class=" mt-50 flex h-3/4 flex-col items-center justify-center rounded-lg border bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800 sm:p-8">
+    <>
+      {!showModal ? (
+        <header>
+          <Navbar />
+        </header>
+      ) : null}
+      <div class="mx-auto flex h-screen max-w-2xl  flex-col items-center justify-center">
+        <div class=" mt-50 v flex h-3/4 w-full flex-col items-center justify-center rounded-lg border bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800 sm:p-8">
           <div class="mt-50 mb-4 flex items-center justify-center ">
             <h3 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
               All Orders
@@ -190,8 +190,8 @@ function OrdersOverview() {
             </ReactModal>
           </div>
         </div>
-      </>
-    </div>
+      </div>
+    </>
   );
 }
 
