@@ -19,7 +19,6 @@ const Navbar = () => {
     const handlenav = () => {
         setNav(!nav)
     };
-
     useEffect(() => {
         const changeColor = () => {
             if (window.scrollY >= 90) {

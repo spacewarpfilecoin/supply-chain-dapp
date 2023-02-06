@@ -51,7 +51,7 @@ const ethereumClient = new EthereumClient(wagmiClient, chains);
 const App = ({ Component, pageProps }) => {
   // default theme setup
   const { address, isConnected } = useAccount();
-
+  const route = useRouter();
   // import google font css
   const pf = theme.fonts.font_family.primary;
   const sf = theme.fonts.font_family.secondary;
@@ -100,7 +100,7 @@ const App = ({ Component, pageProps }) => {
           {isConnected ? (
             <header>
               {/**Navbar Section*/}
-              <Navbar />
+              {route.pathname === "/orders-overview" ? null : <Navbar />}
             </header>
           ) : null}
 

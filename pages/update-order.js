@@ -112,10 +112,10 @@ const UpdateTracker = () => {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <option value="ORDER_PLACED">ORDER_PLACED</option>
-                <option value="IN_TRANSIT">IN_TRANSIT</option>
-                <option value="DELIVERED">DELIVERED</option>
-                <option value="COLLECTED">COLLECTED</option>
+                <option value="1">ORDER_PLACED</option>
+                <option value="2">IN_TRANSIT</option>
+                <option value="3">DELIVERED</option>
+                <option value="4">COLLECTED</option>
               </select>
               {/* <input
             type="text"
