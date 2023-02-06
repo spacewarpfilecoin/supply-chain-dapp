@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
+import { useContract, useProvider, useSigner, useAccount } from "wagmi";
+import Loader from "./Loader";
+import {
+  SMART_CONTRACT_ABI,
+  SMART_CONTRACT_ADDRESS,
+  RAW_CONTRACT_ADDRESS,
+  RAW_CONTRACT_ABI,
+} from "constants";
 
 const Marker = ({ id }) => (
   <div
@@ -15,7 +23,6 @@ const Marker = ({ id }) => (
       fontWeight: "bold",
     }}
   >
-    {console.log({ id })}
     {id}
   </div>
 );
@@ -30,17 +37,49 @@ const parseCoordinates = (coordinates) =>
     };
   });
 
-const ProductMap = ({ coordinates }) => {
+const ProductMap = ({ itemId }) => {
+  const { data: signer, isError, isLoading } = useSigner();
+  const [loading, setLoading] = useState(false);
+  const [newCoordinates, setNewCoordinates] = useState([]);
+  const provider = useProvider();
+
+  const getTrackerContract = useContract({
+    address: SMART_CONTRACT_ADDRESS,
+    abi: SMART_CONTRACT_ABI,
+    signerOrProvider: signer,
+  });
+  const getRawDataContract = useContract({
+    address: RAW_CONTRACT_ADDRESS,
+    abi: RAW_CONTRACT_ABI,
+    signerOrProvider: provider,
+  });
+  const getCoordinates = async () => {
+    try {
+      setLoading(true);
+      const coordinatesArray = await getTrackerContract.getTrackerHistory(
+        itemId
+      );
+      const refactoredCoordinates =
+        await getRawDataContract.arrayBytes32ToString(coordinatesArray[0]);
+      setNewCoordinates(refactoredCoordinates);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
   const [path, setPath] = useState([]);
-  const parsedCoordinates = parseCoordinates(coordinates);
+  const parsedCoordinates = parseCoordinates(newCoordinates);
+
   useEffect(() => {
+    getCoordinates();
     setPath(
       parsedCoordinates.map((coordinate) => ({
         lat: coordinate.latitude,
         lng: coordinate.longitude,
       }))
     );
-  }, [coordinates]);
+  }, []);
 
   const handleApiLoaded = (map, maps) => {
     const bounds = new maps.LatLngBounds();
@@ -64,23 +103,34 @@ const ProductMap = ({ coordinates }) => {
   };
 
   return (
-    <div style={{ height: "700px", width: "80%" }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{ key: "AIzaSyA0Fui7mx4b1rtwZ-TQuY1r80bkOCfj6zY" }}
-        defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
-        defaultZoom={8}
-        zoom={20}
-        onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-      >
-        {parsedCoordinates.map((coordinate) => (
-          <Marker
-            key={coordinate.index}
-            lat={coordinate.latitude}
-            lng={coordinate.longitude}
-            id={coordinate.index + 1}
-          />
-        ))}
-      </GoogleMapReact>
+    <div
+      style={{
+        height: "700px",
+        width: "80%",
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+      }}
+    >
+      {loading ? (
+        <Loader />
+      ) : (
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: "AIzaSyA0Fui7mx4b1rtwZ-TQuY1r80bkOCfj6zY" }}
+          defaultCenter={{ lat: 37.7749, lng: -122.4194 }}
+          defaultZoom={12}
+          onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+        >
+          {parsedCoordinates.map((coordinate) => (
+            <Marker
+              key={coordinate.index}
+              lat={coordinate.latitude}
+              lng={coordinate.longitude}
+              id={coordinate.index + 1}
+            />
+          ))}
+        </GoogleMapReact>
+      )}
     </div>
   );
 };

@@ -84,30 +84,32 @@ function OrdersOverview() {
   const getTrackerContract = useContract({
     address: SMART_CONTRACT_ADDRESS,
     abi: SMART_CONTRACT_ABI,
-    signerOrProvider: provider,
+    signerOrProvider: signer,
   });
 
   const handleGetShipments = async () => {
     try {
       setLoading(true);
+
       const orders = await getTrackerContract.getAllShipments();
-      console.log({ orders });
-      // setOrders(orders);
-      setLoading(false);
+      setOrders(orders);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   };
-  const handleUpdate = (id) => {
-    router.push({
+  const handleUpdate = (id, value) => {
+    route.push({
       pathname: "/update-order",
-      query: { itemId: id },
+      query: { itemId: id, orderStatus: value },
     });
   };
   React.useEffect(() => {
     handleGetShipments();
-  }, []);
+  }, [signer]);
 
   return (
     <>
@@ -116,21 +118,21 @@ function OrdersOverview() {
           <Navbar />
         </header>
       ) : null}
-      <div class="pt-50 flex h-full w-full items-center justify-center bg-theme-light">
-        {orders?.length > 0 ? (
+      <div class="pt-50 flex h-screen min-h-screen w-full items-center justify-center bg-theme-light">
+        {orders[1]?.length > 0 ? (
           <div
             id="createOrder"
-            class="w-100% relative flex items-center justify-center py-20 px-6 "
+            class="w-100% relative flex h-screen items-center justify-center py-20 px-6 "
           >
             <ul class="pt-50 mx-h-screen flex w-full flex-col items-center justify-center">
-              {orders.map((item) => (
+              {orders[1].map((item, index) => (
                 <>
                   <li
-                    key={item.id}
+                    key={index + item}
                     className="h-10% m-10 flex w-3/4 justify-between rounded border border-gray-300 p-4"
                   >
-                    <div onClick={() => handleClick(item)}>{item.id}</div>
-                    <button onClick={() => handleUpdate(item.id)}>
+                    <div onClick={() => handleClick(index)}>{index}</div>
+                    <button onClick={() => handleUpdate(index, item)}>
                       Update
                     </button>
                   </li>
@@ -148,19 +150,17 @@ function OrdersOverview() {
             Create order!
           </button>
         )}
-        {selectedItem ? (
-          <ReactModal
-            style={customStyles}
-            key={selectedItem.id + "modal"}
-            isOpen={showModal}
-            onRequestClose={handleClose}
-          >
-            <>
-              <button onClick={handleClose}>Close</button>
-              <ProductMap coordinates={selectedItem.coordinates} />
-            </>
-          </ReactModal>
-        ) : null}
+        <ReactModal
+          style={customStyles}
+          key={selectedItem + "modal"}
+          isOpen={showModal}
+          onRequestClose={handleClose}
+        >
+          <>
+            <button onClick={handleClose}>Close</button>
+            <ProductMap itemId={selectedItem} />
+          </>
+        </ReactModal>
       </div>
     </>
   );

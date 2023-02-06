@@ -46,12 +46,10 @@ const CreateOrder = () => {
       const rawScoord = await getRawDataContract.stringToBytes32(
         "52.37403, 4.88969"
       );
-      console.log({ rawScoord });
       const rawDcoord = await getRawDataContract.stringToBytes32(
         "62.37403, 5.88969"
       );
 
-      console.log(deliveryAddress, shippingAddresss, rawDcoord, rawScoord);
       const didItWork = await getTrackerContract.createOrder(
         receiver,
         sender,
@@ -60,7 +58,6 @@ const CreateOrder = () => {
       );
       setLoading(false);
       route.push("/orders-overview");
-      console.log({ didItWork });
     } catch (error) {
       console.log(error);
       setLoading(false);

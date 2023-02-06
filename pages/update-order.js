@@ -13,13 +13,13 @@ import {
 import Loader from "@layouts/components/Loader";
 
 const UpdateTracker = () => {
+  const router = useRouter();
   const {
-    query: { itemId },
+    query: { itemId, orderStatus },
   } = router;
   const [id, setId] = useState(itemId ? itemId : "");
   const [address, setAddress] = useState("");
   const [status, setStatus] = useState("");
-  const router = useRouter();
   const provider = useProvider();
   const { data: signer, isError, isLoading } = useSigner();
 
@@ -47,13 +47,13 @@ const UpdateTracker = () => {
         "52.37403, 4.88969"
       );
 
-      const didItWork = await getTrackerContract.updateOrder(
+      const didItWork = await getTrackerContract.updateTracker(
         id,
         rawScoord,
         status
       );
       setLoading(false);
-      console.log({ didItWork });
+      router.push("/orders-overview");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -109,13 +109,13 @@ const UpdateTracker = () => {
                 id="status"
                 name="status"
                 className="focus:shadow-outline w-full appearance-none rounded rounded-full border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
-                value={status}
+                value={status ? status : orderStatus}
                 onChange={(e) => setStatus(e.target.value)}
               >
-                <option value="1">ORDER_PLACED</option>
-                <option value="2">IN_TRANSIT</option>
-                <option value="3">DELIVERED</option>
-                <option value="4">COLLECTED</option>
+                <option value="1">IN_TRANSIT</option>
+                <option value="2">WAREHOUSE</option>
+                <option value="3">TRIED TO DELIVER</option>
+                {/* <option value="4">DELIVERY CONFIRMED</option> */}
               </select>
               {/* <input
             type="text"
@@ -130,7 +130,7 @@ const UpdateTracker = () => {
               type="submit"
               className="w-full rounded-full bg-blue-900 p-2 text-white"
             >
-              Update
+              {loading ? <Loader /> : "Update"}
             </button>
           </form>
         </div>
