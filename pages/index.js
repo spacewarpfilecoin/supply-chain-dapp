@@ -8,6 +8,8 @@ import Loader from "@layouts/components/Loader";
 import { set } from "date-fns";
 import { useRouter } from "next/router";
 import Navbar from "@layouts/components/Navbar";
+import Login from "pages/login";
+
 const orderStatus = { 1: "IN_TRANSIT", 2: "WAREHOUSE", 3: "TRIED TO DELIVER" };
 
 const customStyles = {

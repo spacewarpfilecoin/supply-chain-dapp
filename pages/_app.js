@@ -1,3 +1,7 @@
+<script
+  type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places"
+/>;
 import config from "@config/config.json";
 import theme from "@config/theme.json";
 import Head from "next/head";
@@ -100,7 +104,7 @@ const App = ({ Component, pageProps }) => {
           {isConnected ? (
             <header>
               {/**Navbar Section*/}
-              {route.pathname === "/" ? null : <Navbar />}
+              {route.pathname === "/" || "/orders-overview" ? null : <Navbar />}
             </header>
           ) : null}
 
